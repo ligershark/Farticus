@@ -255,6 +255,7 @@
   <PropertyGroup>
     <EnableCompressVsix Condition=" '$(EnableCompressVsix)'=='' ">true</EnableCompressVsix>
     <BuildLib Condition=" '$(BuildLib)'=='' ">$(MSBuildProjectDirectory)\..\Build\Lib\</BuildLib>
+
   </PropertyGroup>
   <UsingTask AssemblyFile="$(BuildLib)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Compression.Zip"/>
 
@@ -286,6 +287,7 @@
       TaskAction="Create"
       CompressFiles="@(_FilesToZip)"
       ZipFileName="%(_TmpVsixCopy.FullPath)"
+      RemoveRoot="$(_TmpVsixDir)Extracted\"
       CompressionLevel="BestCompression" />
 
     <Delete Files ="$(TargetVsixContainer)"/>
