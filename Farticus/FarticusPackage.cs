@@ -89,12 +89,21 @@ namespace LigerShark.Farticus
                     }
                 }
 
-            }), DispatcherPriority.ApplicationIdle, null);
+            }), DispatcherPriority.Background, null);
         }
 
         private void Fart(bool isSuccess, FartOptions options)
         {
-            bool hasWarnings = _dte.ToolWindows.ErrorList.ErrorItems.Count > 0;
+            bool hasWarnings = false;
+
+            for (var i = 1; i <= _dte.ToolWindows.ErrorList.ErrorItems.Count; i++)  
+            {  
+               if (_dte.ToolWindows.ErrorList.ErrorItems.Item(i).ErrorLevel == vsBuildErrorLevel.vsBuildErrorLevelMedium)  
+               {
+                   hasWarnings = true;
+                   break;  
+               }  
+           } 
 
             if (!isSuccess)
                 FartPlayer.PlayFart(options.SelectedErrorFart);
