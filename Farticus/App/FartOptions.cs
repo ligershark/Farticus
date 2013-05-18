@@ -8,7 +8,6 @@ namespace LigerShark.Farticus
     {
         private bool _enabled = true;
         private Farts _errorFart = Farts.HighPressure;
-        private Farts _warningFart = Farts.Sweet;
         private bool _hasLoaded = false;
 
         [LocDisplayName("On build error")]
@@ -20,21 +19,6 @@ namespace LigerShark.Farticus
             set
             {
                 _errorFart = value;
-
-                if (_hasLoaded)
-                    FartPlayer.PlayFart(value);
-            }
-        }
-
-        [LocDisplayName("On build warning")]
-        [Description("Select which fart to play when the build has warnings")]
-        [Category("Farticus")]
-        public Farts SelectedWarningFart
-        {
-            get { return _warningFart; }
-            set
-            {
-                _warningFart = value;
 
                 if (_hasLoaded)
                     FartPlayer.PlayFart(value);
@@ -60,7 +44,6 @@ namespace LigerShark.Farticus
             {
                 // If the enum changes, the settings will display an error unless we fix the enum values.
                 SelectedErrorFart = _errorFart;
-                SelectedWarningFart = _warningFart;
             }
 
             _hasLoaded = true;

@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
-using System.Windows.Threading;
 
 namespace LigerShark.Farticus
 {
@@ -66,50 +65,26 @@ namespace LigerShark.Farticus
 
         private void OnBuildDone(vsBuildScope Scope, vsBuildAction Action)
         {
-            Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => // Execute after VS finishes its tasks
+            FartOptions options = (FartOptions)GetDialogPage(typeof(FartOptions));
+
+            if (!options.Enabled)
+                return;
+
+            bool isSuccess = _dte.Solution.SolutionBuild.LastBuildInfo == 0;
+
+            if (isSuccess)
             {
-                FartOptions options = (FartOptions)GetDialogPage(typeof(FartOptions));
+                _successfulBuilds++;
 
-                if (options.Enabled)
-                {
-                    bool isSuccess = _dte.Solution.SolutionBuild.LastBuildInfo == 0;
-                    Fart(isSuccess, options);
-
-                    if (isSuccess)
-                    {
-                        _successfulBuilds++;
-
-                        if (_hasBuildFailed)
-                            SetBuildMessage();
-                    }
-                    else
-                    {
-                        _hasBuildFailed = true;
-                        _successfulBuilds = 0;
-                    }
-                }
-
-            }), DispatcherPriority.Background, null);
-        }
-
-        private void Fart(bool isSuccess, FartOptions options)
-        {
-            bool hasWarnings = false;
-
-            for (var i = 1; i <= _dte.ToolWindows.ErrorList.ErrorItems.Count; i++)  
-            {  
-               if (_dte.ToolWindows.ErrorList.ErrorItems.Item(i).ErrorLevel == vsBuildErrorLevel.vsBuildErrorLevelMedium)  
-               {
-                   hasWarnings = true;
-                   break;  
-               }  
-           } 
-
-            if (!isSuccess)
+                if (_hasBuildFailed)
+                    SetBuildMessage();
+            }
+            else
+            {
                 FartPlayer.PlayFart(options.SelectedErrorFart);
-
-            else if (isSuccess && hasWarnings)
-                FartPlayer.PlayFart(options.SelectedWarningFart);
+                _hasBuildFailed = true;
+                _successfulBuilds = 0;
+            }
         }
 
         private void SetBuildMessage()
