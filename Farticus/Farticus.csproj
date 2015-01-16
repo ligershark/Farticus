@@ -5,6 +5,17 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CI|AnyCPU'">
+    <OutputPath>bin\CI\</OutputPath>
+    <DefineConstants>CODE_ANALYSIS;TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <DeployExtension>False</DeployExtension>
+  </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -251,61 +262,36 @@
     <StartProgram>$(MSBuildProgramFiles32)\Microsoft Visual Studio 11.0\Common7\IDE\devenv.exe</StartProgram>
     <StartArguments>/rootsuffix Exp</StartArguments>
   </PropertyGroup>
-
   <PropertyGroup>
     <EnableCompressVsix Condition=" '$(EnableCompressVsix)'=='' ">true</EnableCompressVsix>
     <BuildLib Condition=" '$(BuildLib)'=='' ">$(MSBuildProjectDirectory)\..\Build\Lib\</BuildLib>
-
   </PropertyGroup>
-  <UsingTask AssemblyFile="$(BuildLib)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Compression.Zip"/>
-
-  <Target Name="CompressVsix" 
-          AfterTargets="CreateVsixContainer" 
-          DependsOnTargets="PrepareReplceVsixTemp" 
-          Condition=" '$(EnableCompressVsix)'=='true' ">
-    
+  <UsingTask AssemblyFile="$(BuildLib)MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Compression.Zip" />
+  <Target Name="CompressVsix" AfterTargets="CreateVsixContainer" DependsOnTargets="PrepareReplceVsixTemp" Condition=" '$(EnableCompressVsix)'=='true' ">
     <!-- copy the file to the obj folder and then party on it -->
-    <MakeDir Directories="$(_TmpVsixDir);$(_TmpVsixDir)\Extracted\"/>
-
-    <Copy SourceFiles="$(TargetVsixContainer)"
-          DestinationFolder="$(_TmpVsixDir)">
-      <Output TaskParameter="CopiedFiles" ItemName="_TmpVsixCopy"/>
+    <MakeDir Directories="$(_TmpVsixDir);$(_TmpVsixDir)\Extracted\" />
+    <Copy SourceFiles="$(TargetVsixContainer)" DestinationFolder="$(_TmpVsixDir)">
+      <Output TaskParameter="CopiedFiles" ItemName="_TmpVsixCopy" />
     </Copy>
-    
     <!-- extract out the .zip file -->
-    <MSBuild.ExtensionPack.Compression.Zip 
-      TaskAction="Extract" 
-      ExtractPath="$(_TmpVsixDir)Extracted\" 
-      ZipFileName="@(_TmpVsixCopy->'%(FullPath)')"/>
-
+    <MSBuild.ExtensionPack.Compression.Zip TaskAction="Extract" ExtractPath="$(_TmpVsixDir)Extracted\" ZipFileName="@(_TmpVsixCopy->'%(FullPath)')" />
     <ItemGroup>
-      <_FilesToZip Remove="@(_FilesToZip)"/>
-      <_FilesToZip Include="$(_TmpVsixDir)Extracted\**\*"/>
+      <_FilesToZip Remove="@(_FilesToZip)" />
+      <_FilesToZip Include="$(_TmpVsixDir)Extracted\**\*" />
     </ItemGroup>
-
-    <MSBuild.ExtensionPack.Compression.Zip
-      TaskAction="Create"
-      CompressFiles="@(_FilesToZip)"
-      ZipFileName="%(_TmpVsixCopy.FullPath)"
-      RemoveRoot="$(_TmpVsixDir)Extracted\"
-      CompressionLevel="BestCompression" />
-
-    <Delete Files ="$(TargetVsixContainer)"/>
+    <MSBuild.ExtensionPack.Compression.Zip TaskAction="Create" CompressFiles="@(_FilesToZip)" ZipFileName="%(_TmpVsixCopy.FullPath)" RemoveRoot="$(_TmpVsixDir)Extracted\" CompressionLevel="BestCompression" />
+    <Delete Files="$(TargetVsixContainer)" />
     <Copy SourceFiles="%(_TmpVsixCopy.FullPath)" DestinationFiles="$(TargetVsixContainer)" />
   </Target>
-
   <Target Name="PrepareReplceVsixTemp" DependsOnTargets="CreateVsixContainer">
     <ItemGroup>
-      <_VsixItem Remove="@(_VsixItem)"/>
+      <_VsixItem Remove="@(_VsixItem)" />
       <_VsixItem Include="$(TargetVsixContainer)" />
-
-      <_TmpVsixPathItem Include="$(IntermediateOutputPath)VsixTemp\%(_VsixItem.Filename)%(_VsixItem.Extension)"/>
+      <_TmpVsixPathItem Include="$(IntermediateOutputPath)VsixTemp\%(_VsixItem.Filename)%(_VsixItem.Extension)" />
     </ItemGroup>
-    
     <PropertyGroup>
       <_TmpVsixDir>%(_TmpVsixPathItem.RootDir)%(_TmpVsixPathItem.Directory)</_TmpVsixDir>
     </PropertyGroup>
-
-    <RemoveDir Directories="$(_TmpVsixDir)"/>  
-  </Target>  
+    <RemoveDir Directories="$(_TmpVsixDir)" />
+  </Target>
 </Project>
