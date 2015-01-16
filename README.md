@@ -1,8 +1,6 @@
-﻿# Farticus for Visual Studio 2012 #
+﻿# Farticus for Visual Studio #
 
 The original Visual Studio fart app
-  
-To open the solution, you need to download the [Visual Studio 2012 SDK](http://www.microsoft.com/en-us/download/details.aspx?id=30668)
 
 ----------------
 
