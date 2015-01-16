@@ -2,6 +2,8 @@
 
 The original Visual Studio fart app
 
+[![Build status](https://ci.appveyor.com/api/projects/status/tcugu9rs3ihbgl7o?svg=true)](https://ci.appveyor.com/project/madskristensen/farticus)
+
 ----------------
 
 Created by:
