@@ -35,7 +35,7 @@
   </KeyBindings>
 
   <Symbols>
-    <GuidSymbol name="guidFarticusPkg" value="{1324ce08-8b25-440c-8d5c-07e1fa0cce4a}" />
+    <GuidSymbol name="guidFarticusPkg" value="{1324ce08-8b25-440c-1234-07e1fa0cce4a}" />
 
     <GuidSymbol name="guidFarticusCmdSet" value="{7a332164-9846-4bc6-a00f-bc7e6132f29a}">
       <IDSymbol name="MyMenuGroup" value="0x1020" />
