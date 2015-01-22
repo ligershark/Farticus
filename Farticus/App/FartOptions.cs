@@ -28,6 +28,7 @@ namespace LigerShark.Farticus
         [LocDisplayName("Enable auto-farts")]
         [Description("When enabled, farts are played when the build fails or has warnings")]
         [Category("Farticus")]
+        [DefaultValue(true)]
         public bool Enabled
         {
             get { return _enabled; }
