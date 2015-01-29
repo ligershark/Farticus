@@ -7,8 +7,8 @@
     <MoreInfo>http://visualstudiogallery.msdn.microsoft.com/33b0242d-7158-4d39-9a01-0a08cf7c28bd</MoreInfo>
     <License>License.txt</License>
     <GettingStartedGuide>http://visualstudiogallery.msdn.microsoft.com/33b0242d-7158-4d39-9a01-0a08cf7c28bd</GettingStartedGuide>
-    <Icon>logo.png</Icon>
-    <PreviewImage>logo.png</PreviewImage>
+    <Icon>Resources\logo.png</Icon>
+    <PreviewImage>Resources\preview.png</PreviewImage>
     <Tags>fart, sound</Tags>
   </Metadata>
   <Installation InstalledByMsi="false">
