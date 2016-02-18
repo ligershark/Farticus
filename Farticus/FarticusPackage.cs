@@ -10,9 +10,9 @@ using System.Runtime.InteropServices;
 namespace LigerShark.Farticus
 {
     [PackageRegistration(UseManagedResourcesOnly = true)]
-    [InstalledProductRegistration("#110", "#112", "1.7", IconResourceID = 400)]
+    [InstalledProductRegistration("#110", "#112", Vsix.Version, IconResourceID = 400)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [Guid(GuidList.guidFarticusPkgString)]
+    [Guid(PackageGuids.guidFarticusPkgString)]
     [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
     [ProvideOptionPage(typeof(FartOptions), "Farticus", "General", 101, 101, true, new[] { "The original Visual Studio fart app" })]
     public sealed class FarticusPackage : ExtensionPointPackage
@@ -47,7 +47,7 @@ namespace LigerShark.Farticus
 
             if (null != mcs)
             {
-                CommandID fartCmd = new CommandID(GuidList.guidFarticusCmdSet, (int)PkgCmdIDList.cmdidRandomFart);
+                CommandID fartCmd = new CommandID(PackageGuids.guidFarticusCmdSet, PackageIds.cmdidRandomFart);
                 MenuCommand menuItem = new MenuCommand(OnFartButtonClick, fartCmd);
                 mcs.AddCommand(menuItem);
             }
